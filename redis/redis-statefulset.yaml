@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: redis
+spec:
+  replicas: 1
+  serviceName: redis
+  selector:
+    matchLabels:
+      app: redis
+  template:
+    metadata:
+      labels:
+        app: redis
+    spec:
+      containers:
+      - name: redis
+        image: redis:latest
+        resources:
+             limits:
+               cpu: 1000m
+               memory: "2Gi"
+             requests:
+               cpu: 100m
+               memory: "500Mi"
+        ports:
+        - containerPort: 6379
+          name: redis
+          protocol: TCP
+

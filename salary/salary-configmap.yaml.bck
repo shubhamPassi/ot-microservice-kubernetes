@@ -1,0 +1,57 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: salary-configmap
+  labels:
+    app: salary
+data:
+  redis-url: redis-svc
+  scylladb-url: scylladb-svc
+  scylladb-username: application
+
+  
+  application.yml: |
+    spring:
+      cassandra:
+        keyspace-name: attendance_db
+        contact-points: scylladb-svc
+        port: 9042
+        username: application
+        password: password
+        local-datacenter: datacenter1
+      data:
+        redis:
+          host: redis-svc
+          port: 6379
+          password: password
+
+    management:
+      endpoints:
+        web:
+          base-path: /actuator
+          exposure:
+            include: [ "health","prometheus", "metrics" ]
+      health:
+        cassandra:
+          enabled: true
+      endpoint:
+        health:
+          show-details: always
+        metrics:
+          enabled: true
+        prometheus:
+          enabled: true
+
+    logging:
+      level:
+        org.springframework.web: DEBUG
+
+    springdoc:
+      swagger-ui:
+        path: /salary-documentation
+        tryItOutEnabled: true
+        filter: true
+      api-docs:
+        path: /salary-api-docs
+      show-actuator: true
+

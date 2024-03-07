@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: salary-configmap
+  labels:
+    app: salary
+data:
+  redis-url: redis-svc
+  scylladb-url: scylladb-svc
+  scylladb-username: application

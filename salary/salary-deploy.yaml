@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: salary
+  name: salary-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: salary
+  template:
+    metadata:
+      labels:
+        app: salary
+    spec:
+      containers:
+      - image: rishabhsharmaip/salary:2
+        name: salary-container
+        ports:
+        - containerPort: 8080
+        env:
+        - name: SCYLLADB_USERNAME
+          valueFrom:
+            configmapKeyRef:
+              name: "salary-configmap"
+              key: "scylladb-username"
+        - name: SCYLLADB_URL
+          valueFrom:
+            configmapKeyRef:
+              name: "salary-configmap"
+              key: "scylladb-url"
+        - name: REDIS_URL
+          valueFrom:
+            configmapKeyRef:
+              name: "salary-configmap"
+              key: "redis-url"
+        - name: SCYLLADB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: "salary-secret"
+              key: "scylladb-password"
+        - name: REDIS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: "salary-secret"
+              key: "redis-password"

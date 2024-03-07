@@ -1,0 +1,37 @@
+---
+kind: StatefulSet
+apiVersion: apps/v1
+metadata:
+  name: scylladb
+spec:
+  serviceName: scylladb # provides association with our previously created elasticsearch Service.
+  replicas: 1
+  selector:
+    matchLabels:
+      app: scylladb
+  template:
+    metadata:
+      labels:
+        app: scylladb
+    spec:
+      containers:
+        - name: scylladb
+          image: scylladb/scylla:latest
+          resources:
+              limits:
+                cpu: 1000m
+                memory: "2Gi"
+              requests:
+                cpu: 100m
+                memory: "500Mi"
+          ports:
+          - containerPort: 9042
+            name: rest
+            protocol: TCP
+          args:
+            - --smp
+            - "1"
+            - --authenticator
+            - PasswordAuthenticator 
+            - --authorizer
+            - CassandraAuthorizer
