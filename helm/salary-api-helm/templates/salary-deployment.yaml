@@ -24,6 +24,20 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
@@ -32,6 +46,12 @@ spec:
           - name: http
             containerPort: {{ .Values.service.port }}
             protocol: TCP
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: http
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
           env:
           - name: SCYLLADB_USERNAME
             valueFrom:
