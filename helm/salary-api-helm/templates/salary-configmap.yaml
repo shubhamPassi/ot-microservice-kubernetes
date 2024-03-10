@@ -7,4 +7,4 @@ metadata:
 data:
   redis-url: {{ .Values.redisUrl }}
   scylladb-url: {{ .Values.scylladbUrl }}
-  scylladb-username: {{ .Values.username }}
+  scylladb-username: {{ .Values.scylladbUsername }}

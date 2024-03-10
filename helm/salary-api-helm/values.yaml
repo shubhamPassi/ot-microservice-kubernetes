@@ -71,10 +71,9 @@ tolerations: []
 
 affinity: {}
 
-username: "application"
-
 scylladbUrl: "scylladb-svc"
 scylladbPassword: cGFzc3dvcmQ=
+scylladbUsername: "application"
 
 redisUrl: "redis-svc"
 redisPassword: cGFzc3dvcmQ=
