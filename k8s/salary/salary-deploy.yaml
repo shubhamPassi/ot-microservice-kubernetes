@@ -15,24 +15,24 @@ spec:
         app: salary
     spec:
       containers:
-      - image: rishabhsharmaip/salary:2
+      - image: shubhamk0/salary:1
         name: salary-container
         ports:
         - containerPort: 8080
         env:
         - name: SCYLLADB_USERNAME
           valueFrom:
-            configmapKeyRef:
+            configMapKeyRef:
               name: "salary-configmap"
               key: "scylladb-username"
         - name: SCYLLADB_URL
           valueFrom:
-            configmapKeyRef:
+            configMapKeyRef:
               name: "salary-configmap"
               key: "scylladb-url"
         - name: REDIS_URL
           valueFrom:
-            configmapKeyRef:
+            configMapKeyRef:
               name: "salary-configmap"
               key: "redis-url"
         - name: SCYLLADB_PASSWORD

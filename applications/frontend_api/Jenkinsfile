@@ -1,0 +1,45 @@
+@Library('ot-shared-library') _
+
+pipeline {
+    agent any
+
+    stages {
+        stage('Bug Analysis') {
+            steps {
+                script {
+                    sh 'npm install'
+                    sh 'npm ci'
+                    sh 'echo "module.exports = { extends: \'eslint:recommended\' };" > .eslintrc.js'
+                    sh 'npx eslint . --ext .js,.jsx --format ${format} --output-file ${filename} || true'
+                }
+            }
+        }
+
+        stage('Code Analysis') {
+            steps {
+                withCredentials([string(credentialsId: "${cred}", variable: 'token')]) {
+                    sh """
+                         sonar-scanner-5.0.1.3006-linux/bin/sonar-scanner \
+                        -Dsonar.projectKey=${SONAR_PROJECT_KEY} \
+                        -Dsonar.sources=${SONAR_SOURCES} \
+                        -Dsonar.host.url=${SONAR_HOST_URL} \
+                        -Dsonar.token=${token}
+                    """
+                }
+            }
+        }
+
+        stage("Quality gate") {
+            steps {
+                waitForQualityGate abortPipeline: true
+            }
+        }
+
+        stage('Dependency Check') {
+            steps {
+                sh 'ls'
+                dependencyCheck additionalArguments: '--project frontend-dependency --scan /var/lib/jenkins/workspace/frontend-dependency  --format XML', odcInstallation: 'dependency-check'
+            }
+        }
+    }
+}
