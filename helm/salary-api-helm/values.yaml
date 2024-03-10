@@ -74,8 +74,7 @@ affinity: {}
 username: "application"
 
 scylladbUrl: "scylladb-svc"
+scylladbPassword: cGFzc3dvcmQ=
 
 redisUrl: "redis-svc"
-
-scylladbPassword: cGFzc3dvcmQ=
 redisPassword: cGFzc3dvcmQ=
