@@ -1,16 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "salary-api-helm.name" . }}-deployement
+  name: {{ include "employee-api-helm.name" . }}-deployement
   labels:
-    {{- include "salary-api-helm.labels" . | nindent 4 }}
+    {{- include "employee-api-helm.labels" . | nindent 4 }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
   {{- end }}
   selector:
     matchLabels:
-      {{- include "salary-api-helm.selectorLabels" . | nindent 6 }}
+      {{- include "employee-api-helm.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -18,7 +18,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "salary-api-helm.selectorLabels" . | nindent 8 }}
+        {{- include "employee-api-helm.selectorLabels" . | nindent 8 }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
@@ -55,28 +55,28 @@ spec:
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           env:
-          - name: SALARY_SCYLLADB_USERNAME
+          - name: EMPLOYEE_SCYLLADB_USERNAME
             valueFrom:
               configMapKeyRef:
-                name: "{{ include "salary-api-helm.name" . }}-configmap"
-                key: "salary-scylladb-username"
+                name: "{{ include "employee-api-helm.name" . }}-configmap"
+                key: "employee-scylladb-username"
           - name: SCYLLADB_URL
             valueFrom:
               configMapKeyRef:
-                name: "{{ include "salary-api-helm.name" . }}-configmap"
+                name: "{{ include "employee-api-helm.name" . }}-configmap"
                 key: "scylladb-url"
           - name: REDIS_URL
             valueFrom:
               configMapKeyRef:
-                name: "{{ include "salary-api-helm.name" . }}-configmap"
+                name: "{{ include "employee-api-helm.name" . }}-configmap"
                 key: "redis-url"
-          - name: SALARY_SCYLLADB_PASSWORD
+          - name: EMPLOYEE_SCYLLADB_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: "{{ include "salary-api-helm.name" . }}-secret"
-                key: "salary-scylladb-password"
-          - name: SALARY_REDIS_PASSWORD
+                name: "{{ include "employee-api-helm.name" . }}-secret"
+                key: "employee-scylladb-password"
+          - name: EMPLOYEE_REDIS_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: "salary-secret"
-                key: "salary-redis-password"
+                name: "employee-secret"
+                key: "employee-redis-password"

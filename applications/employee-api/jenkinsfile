@@ -1,0 +1,88 @@
+@Library('OT-Shared-Library') _
+
+pipeline 
+{
+    agent any
+    
+     parameters 
+     {
+        booleanParam(name: 'SKIP_STATIC_CODE_ANALYSIS', defaultValue: false, description: 'Skip code anlaysis')
+        booleanParam(name: 'SKIP_UNIT_TEST', defaultValue: false, description: 'Skip UNIT TEST stage')
+        booleanParam(name: 'SKIP_BUG_ANALYSIS', defaultValue: false, description: 'Skip bug analysis stage')
+        booleanParam(name: 'SKIP_DEPENDENCY_SCANNING', defaultValue: false, description: 'Skip DEPENDENCY_SCANNING stage')
+    }
+    
+    stages 
+    {
+        
+        stage('Install Dependencies') 
+        {
+            steps 
+            {
+                golang InstallDependencies()
+            }
+        }
+        
+        stage('Static Code Analysis') 
+        {
+            
+            when 
+            {
+                expression { params.SKIP_STATIC_CODE_ANALYSIS == false }
+            }
+            steps
+            {
+               golang-staticcode-analysis()
+            }
+        }
+        
+        stage('Bug Analysis') 
+        {
+            when 
+            {
+                expression { params.SKIP_BUG_ANALYSIS == false }
+            }
+            steps
+            {
+                golang-buganalysis()
+            }
+        }
+        
+        stage('Unit Test') 
+        {
+            when 
+            {
+                expression { params.SKIP_UNIT_TEST == false }
+            }
+            steps
+            {
+               golang-unittest()
+            }
+            
+        }
+        
+        stage('Dependency Scanning')
+        {
+            
+            when 
+            {
+                expression { params.SKIP_DEPENDENCY_SCANNING == false }
+            }
+            steps
+            {
+                golangDependencyScanning()
+            }
+        }
+    }
+    
+    post {
+        success 
+        {
+            echo 'Build successful! All checks passed.'
+        }
+        failure 
+        {
+            echo 'Build failed! Check the logs for details.'
+        }
+    }
+}

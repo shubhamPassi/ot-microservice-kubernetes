@@ -20,11 +20,11 @@ spec:
         ports:
         - containerPort: 8080
         env:
-        - name: SCYLLADB_USERNAME
+        - name: SALARY_SCYLLADB_USERNAME
           valueFrom:
             configMapKeyRef:
               name: "salary-configmap"
-              key: "scylladb-username"
+              key: "salary-scylladb-username"
         - name: SCYLLADB_URL
           valueFrom:
             configMapKeyRef:
@@ -35,13 +35,13 @@ spec:
             configMapKeyRef:
               name: "salary-configmap"
               key: "redis-url"
-        - name: SCYLLADB_PASSWORD
+        - name: SALARY_SCYLLADB_PASSWORD
           valueFrom:
             secretKeyRef:
               name: "salary-secret"
-              key: "scylladb-password"
-        - name: REDIS_PASSWORD
+              key: "salary-scylladb-password"
+        - name: SALARY_REDIS_PASSWORD
           valueFrom:
             secretKeyRef:
               name: "salary-secret"
-              key: "redis-password"
+              key: "salary-redis-password"

@@ -3,14 +3,14 @@ spring:
     keyspace-name: attendance_db
     contact-points: ${SCYLLADB_URL}
     port: 9042
-    username: ${SCYLLADB_USERNAME}
-    password: ${SCYLLADB_PASSWORD}
+    username: ${SALARY_SCYLLADB_USERNAME}
+    password: ${SALARY_SCYLLADB_PASSWORD}
     local-datacenter: datacenter1
   data:
     redis:
       host: ${REDIS_URL}
       port: 6379
-      password: ${REDIS_PASSWORD}
+      password: ${SALARY_REDIS_PASSWORD}
 
 management:
   endpoints:

@@ -1,0 +1,11 @@
+scylladb:
+  host: ${SCYLLADB_URL}:9042
+  username: ${EMPLOYEE_SCYLLADB_USERNAME}
+  password: ${EMPLOYEE_SCYLLADB_PASSWORD}
+  keyspace: employee_db
+
+redis:
+  enabled: true
+  host: ${REDIS_URL}:6379
+  password: ${EMPLOYEE_REDIS_PASSWORD}
+  database: 0

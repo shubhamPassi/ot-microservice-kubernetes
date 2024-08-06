@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: employee
+  name: employee-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: employee
+  template:
+    metadata:
+      labels:
+        app: employee
+    spec:
+      initContainers:
+      - name: fetch-config
+        image: kubectl:latest
+        command: ["/bin/sh", "-c"]
+        args:
+        - kubectl get configmap employee-configmap -o=jsonpath='{.data.config\.yaml}' > /config/config.yaml
+        volumeMounts:
+        - name: config-volume
+          mountPath: /config
+      containers:
+      - name: employee-container
+        image: shubhamk0/employee:1
+        ports:
+        - containerPort: 8080
+        volumeMounts:
+        - name: config-volume
+          mountPath: /config
+      volumes:
+      - name: config-volume
+        emptyDir: {}
+        # env:
+        # - name: EMPLOYEE_SCYLLADB_USERNAME
+        #   valueFrom:
+        #     configMapKeyRef:
+        #       name: "employee-configmap"
+        #       key: "employee-scylladb-username"
+        # - name: SCYLLADB_URL
+        #   valueFrom:
+        #     configMapKeyRef:
+        #       name: "employee-configmap"
+        #       key: "scylladb-url"
+        # - name: REDIS_URL
+        #   valueFrom:
+        #     configMapKeyRef:
+        #       name: "employee-configmap"
+        #       key: "redis-url"
+        # - name: EMPLOYEE_SCYLLADB_PASSWORD
+        #   valueFrom:
+        #     secretKeyRef:
+        #       name: "employee-secret"
+        #       key: "employee-scylladb-password"
+        # - name: EMPLOYEE_REDIS_PASSWORD
+        #   valueFrom:
+        #     secretKeyRef:
+        #       name: "employee-secret"
+        #       key: "employee-redis-password"
