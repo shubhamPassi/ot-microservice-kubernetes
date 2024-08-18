@@ -69,7 +69,11 @@ make run-migrations
 Once the database and table is initialized, we can run the application by:
 
 ```shell
-gunicorn app:app --log-config log.conf -b 0.0.0.0:8080
+gunicorn app:app --log-config log.conf -b 0.0.0.0:8080  # Linux
+########
+#  OR  #
+########
+waitress-serve  --listen=0.0.0.0:8081 app:app # Windows and also do "pip install waitress"
 ```
 
 ## Endpoints Information
